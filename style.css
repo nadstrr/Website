@@ -2,3 +2,8 @@ body {
     font-size: 15pt;
     background-color:#FFDB58;
 }
+img{
+  border:solid 3px;
+  
+  border-radius: 100px 100px 300px 300px;
+}
