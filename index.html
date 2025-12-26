@@ -4,9 +4,21 @@
   <head> 
   <link rel="stylesheet"
   href="style.css">
+  <script src="main.js" defer></script>
   </head>
    <h1 style="font-size: 90px; text-align: center; "> <strong>Follow the sun!🌞</strong></h1>
   <img src="henry.jpeg" width="600px" style="display: block; margin: 0 auto; ">
+  <br>
+  <br>
+  <br>
+  <div style="text-align: center; margin: 20px auto;">
+    <p style="font-size: 24px; margin-bottom: 10px;">Choose a number:</p>
+    <input type="number" id="numberInput" placeholder="Enter a number" style="padding: 10px; font-size: 18px; text-align: center; border: 2px solid #000; border-radius: 5px;">
+    <br><br>
+    <button onclick="checkNumber()" style="padding: 10px 20px; font-size: 18px; background-color: #FFDB58; border: 2px solid #000; border-radius: 5px; cursor: pointer;">Check</button>
+    <br><br>
+    <p id="result" style="font-size: 24px; font-weight: bold; min-height: 30px;"></p>
+  </div>
   <br>
   <br>
   <br>
