@@ -5,6 +5,8 @@ function checkNumber() {
     
     if (number === 67) {
         result.textContent = "slay qween";
+    } else if (number === 666) {
+        result.textContent = "satan detected";
     } else {
         result.textContent = "wrong! choose again";
     }
