@@ -9,3 +9,13 @@ function checkNumber() {
         result.textContent = "wrong! choose again";
     }
 }
+
+// Add Enter key support
+document.addEventListener('DOMContentLoaded', function() {
+    const input = document.getElementById('numberInput');
+    input.addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+            checkNumber();
+        }
+    });
+});
