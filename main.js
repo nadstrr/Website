@@ -7,6 +7,8 @@ function checkNumber() {
         result.textContent = "slay qween";
     } else if (number === 666) {
         result.textContent = "satan detected";
+    } else if (number === 42) {
+        result.textContent = "meaning of life found";
     } else {
         result.textContent = "wrong! choose again";
     }
