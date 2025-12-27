@@ -58,7 +58,7 @@ function checkNumber() {
         result.textContent = "boring";
         isSpecial = true;
      } else if (number ===21) {
-        result.textContent = "we gwt it, you know how to count";
+        result.textContent = "we get it, you know how to count";
         isSpecial = true;
     } else if (number === 789) {
         result.textContent = "maybe 7 isnt so lucky if its doing that";
