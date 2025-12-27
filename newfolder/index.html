@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" href="style.css">
+    <script src="main.js" defer></script>
+  </head>
+  <body>
+    <div id="intro-animation">
+      <div id="intro-content">
+        <div id="speech-bubble">
+          <p>All aboard!</p>
+        </div>
+        <img id="intro-train" src="image.png" alt="Train">
+        <button id="start-adventure-btn">Let's go on an adventure</button>
+      </div>
+    </div>
+    
+    <div id="quiz-container">
+      <div id="header">
+        <h1>Train Trivia Quiz</h1>
+        <div id="progress">Question <span id="current-question">1</span> of <span id="total-questions">20</span></div>
+      </div>
+
+      <div id="track-container">
+        <div id="tracks"></div>
+        <div id="train-wrapper">
+          <img id="train" src="image.png" alt="Train">
+          <div id="steam-container">
+            <div class="steam steam1"></div>
+            <div class="steam steam2"></div>
+            <div class="steam steam3"></div>
+          </div>
+        </div>
+        <div id="stations"></div>
+      </div>
+
+      <div id="question-container">
+        <div id="question-number"></div>
+        <div id="question-text"></div>
+        <div id="options-container"></div>
+        <button id="submit-btn" style="display: none;">Submit Answer</button>
+      </div>
+
+      <div id="results-container" style="display: none;">
+        <h2>Quiz Complete!</h2>
+        <div id="score-display"></div>
+        <div id="smiley">😊</div>
+        <button id="restart-btn">Play Again</button>
+      </div>
+    </div>
+  </body>
+</html>
+

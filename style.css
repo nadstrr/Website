@@ -30,6 +30,41 @@ body {
     z-index: 1;
     background-color: transparent;
 }
+
+.top-nav {
+    position: relative;
+    z-index: 100;
+    padding: 20px;
+    text-align: center;
+}
+
+.nav-button {
+    display: inline-block;
+    padding: 12px 30px;
+    background-color: #000;
+    color: #FFDB58;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 8px;
+    border: 2px solid #000;
+    transition: all 0.3s ease;
+    font-family: Arial, sans-serif;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.nav-button:hover {
+    background-color: #FFDB58;
+    color: #000;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.nav-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 img{
   border:solid 3px;
   
