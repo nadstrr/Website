@@ -13,12 +13,17 @@ function checkNumber() {
         result.textContent = "420 blaze it";
     } else if (number === 69) {
         result.textContent = "boring";
+    } else if (number === 789) {
+        result.textContent = "maybe 7 isnt so lucky if its doing that";
     } else {
         result.textContent = "wrong! choose again";
     }
-    else if (number === 789) {
-        result.textContent = "maybe 7 isnt so lucky if its doing that";
-    }
+    
+    // Trigger dance animation
+    input.classList.add('dance');
+    setTimeout(() => {
+        input.classList.remove('dance');
+    }, 600);
 }
 
 // Add Enter key support
