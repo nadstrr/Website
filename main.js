@@ -16,6 +16,9 @@ function checkNumber() {
     } else {
         result.textContent = "wrong! choose again";
     }
+    else if (number === 789) {
+        result.textContent = "maybe 7 isnt so lucky if its doing that";
+    }
 }
 
 // Add Enter key support
