@@ -1,7 +1,9 @@
-// Helper function to shuffle array
+// Helper function to shuffle array (Fisher-Yates algorithm with enhanced randomness)
 function shuffleArray(array) {
   const shuffled = [...array];
+  
   for (let i = shuffled.length - 1; i > 0; i--) {
+    // Use Math.random() which should be different each time
     const j = Math.floor(Math.random() * (i + 1));
     [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
   }
@@ -32,100 +34,326 @@ function shuffleQuestionOptions(question) {
 
 const all_questions = [
   {
-    question: "What is the hardest substance in the human body?",
-    options: ["Bone", "Enamel", "Cartilage", "Teeth"],
-    correct: 1
-  },
-  {
-    question: "What is the common name of the object formerly known as a besom, associated with Halloween, and produced by brands like Treelen and Libman?",
-    options: ["Broom", "Mop", "Brush", "Duster"],
+    question: "What is the name of the single-player sliding block puzzle game designed by Italian web developer Gabriele Cirulli in which a smartphone user tries to create a certain value by sliding and combining tiles around a grid?",
+    options: ["2048", "Tetris", "Candy Crush", "Sudoku"],
     correct: 0
   },
   {
-    question: "Which animal is known to \"laugh\" when tickled?",
-    options: ["Dogs", "Rats", "Cats", "Monkeys"],
-    correct: 1
+    question: "What is the smallest planet in our solar system?",
+    options: ["Mercury", "Venus", "Mars", "Pluto"],
+    correct: 0
   },
   {
-    question: "True or False — A shrimp's heart is in its head.",
-    options: ["True", "False"],
+    question: "What is the hardest natural substance on Earth?",
+    options: ["Diamond", "Gold", "Iron", "Quartz"],
+    correct: 0
+  },
+  {
+    question: "What is the capital of Japan?",
+    options: ["Tokyo", "Osaka", "Kyoto", "Seoul"],
+    correct: 0
+  },
+  {
+    question: "Which element has the chemical symbol 'O'?",
+    options: ["Oxygen", "Osmium", "Oganesson", "Ozone"],
+    correct: 0
+  },
+  {
+    question: "How many continents are there on Earth?",
+    options: ["Seven", "Five", "Six", "Eight"],
+    correct: 0
+  },
+  {
+    question: "Who wrote the play 'Romeo and Juliet'?",
+    options: ["William Shakespeare", "Charles Dickens", "Jane Austen", "Mark Twain"],
+    correct: 0
+  },
+  {
+    question: "What is the largest mammal in the world?",
+    options: ["Blue whale", "Elephant", "Giraffe", "Hippopotamus"],
+    correct: 0
+  },
+  {
+    question: "What is the official language of Brazil?",
+    options: ["Portuguese", "Spanish", "French", "English"],
+    correct: 0
+  },
+  {
+    question: "Which planet is known as the Red Planet?",
+    options: ["Mars", "Venus", "Jupiter", "Saturn"],
+    correct: 0
+  },
+  {
+    question: "What gas do plants absorb from the atmosphere?",
+    options: ["Carbon dioxide", "Oxygen", "Nitrogen", "Hydrogen"],
+    correct: 0
+  },
+  {
+    question: "How many bones are in the human body?",
+    options: ["206", "200", "210", "220"],
+    correct: 0
+  },
+  {
+    question: "What is the chemical symbol for water?",
+    options: ["H₂O", "CO₂", "NaCl", "O₂"],
+    correct: 0
+  },
+  {
+    question: "What is the powerhouse of the cell?",
+    options: ["Mitochondria", "Nucleus", "Ribosome", "Chloroplast"],
+    correct: 0
+  },
+  {
+    question: "What is the speed of light?",
+    options: ["Approximately 300,000 kilometers per second", "Approximately 150,000 kilometers per second", "Approximately 450,000 kilometers per second", "Approximately 200,000 kilometers per second"],
+    correct: 0
+  },
+  {
+    question: "Which planet has the most moons?",
+    options: ["Saturn", "Jupiter", "Neptune", "Uranus"],
+    correct: 0
+  },
+  {
+    question: "What is the process by which plants make their food?",
+    options: ["Photosynthesis", "Respiration", "Digestion", "Fermentation"],
+    correct: 0
+  },
+  {
+    question: "What force keeps us grounded on Earth?",
+    options: ["Gravity", "Magnetism", "Friction", "Inertia"],
+    correct: 0
+  },
+  {
+    question: "What is the most abundant gas in Earth's atmosphere?",
+    options: ["Nitrogen", "Oxygen", "Carbon dioxide", "Argon"],
+    correct: 0
+  },
+  {
+    question: "What is the chemical symbol for gold?",
+    options: ["Au", "Go", "Gd", "Ag"],
+    correct: 0
+  },
+  {
+    question: "How many elements are there in the periodic table?",
+    options: ["118", "100", "120", "115"],
+    correct: 0
+  },
+  {
+    question: "What is the center of an atom called?",
+    options: ["Nucleus", "Proton", "Electron", "Neutron"],
+    correct: 0
+  },
+  {
+    question: "Which scientist proposed the theory of relativity?",
+    options: ["Albert Einstein", "Isaac Newton", "Stephen Hawking", "Galileo Galilei"],
+    correct: 0
+  },
+  {
+    question: "Who was the first President of the United States?",
+    options: ["George Washington", "Thomas Jefferson", "John Adams", "Benjamin Franklin"],
+    correct: 0
+  },
+  {
+    question: "What year did World War II end?",
+    options: ["1945", "1944", "1946", "1943"],
+    correct: 0
+  },
+  {
+    question: "Which ancient civilization built the pyramids?",
+    options: ["Egyptians", "Greeks", "Romans", "Mayans"],
+    correct: 0
+  },
+  {
+    question: "Who was known as the 'Iron Lady'?",
+    options: ["Margaret Thatcher", "Queen Elizabeth II", "Indira Gandhi", "Angela Merkel"],
+    correct: 0
+  },
+  {
+    question: "What was the name of the ship on which the Pilgrims traveled to America in 1620?",
+    options: ["Mayflower", "Titanic", "Santa Maria", "Endeavour"],
+    correct: 0
+  },
+  {
+    question: "Who was the first man to walk on the moon?",
+    options: ["Neil Armstrong", "Buzz Aldrin", "Yuri Gagarin", "John Glenn"],
+    correct: 0
+  },
+  {
+    question: "What wall divided East and West Berlin during the Cold War?",
+    options: ["The Berlin Wall", "The Iron Curtain", "The Great Wall", "The Maginot Line"],
+    correct: 0
+  },
+  {
+    question: "Which war was fought between the North and South regions in the United States?",
+    options: ["The Civil War", "World War I", "The Revolutionary War", "The War of 1812"],
+    correct: 0
+  },
+  {
+    question: "Who discovered America?",
+    options: ["Christopher Columbus", "Amerigo Vespucci", "Ferdinand Magellan", "Vasco da Gama"],
+    correct: 0
+  },
+  {
+    question: "In what year did the Soviet Union collapse?",
+    options: ["1991", "1989", "1990", "1992"],
+    correct: 0
+  },
+  {
+    question: "Who was the leader of the Soviet Union during World War II?",
+    options: ["Joseph Stalin", "Vladimir Lenin", "Nikita Khrushchev", "Mikhail Gorbachev"],
+    correct: 0
+  },
+  {
+    question: "Which empire was ruled by Genghis Khan?",
+    options: ["The Mongol Empire", "The Roman Empire", "The Ottoman Empire", "The British Empire"],
+    correct: 0
+  },
+  {
+    question: "What was the first successful English colony in America?",
+    options: ["Jamestown", "Plymouth", "Roanoke", "Boston"],
+    correct: 0
+  },
+  {
+    question: "Who was the British Prime Minister during most of World War II?",
+    options: ["Winston Churchill", "Neville Chamberlain", "Clement Attlee", "David Lloyd George"],
+    correct: 0
+  },
+  {
+    question: "What year did the Berlin Wall fall?",
+    options: ["1989", "1988", "1990", "1991"],
+    correct: 0
+  },
+  {
+    question: "What is the longest river in the world?",
+    options: ["The Nile River", "The Amazon River", "The Mississippi River", "The Yangtze River"],
+    correct: 0
+  },
+  {
+    question: "Which country has the largest population?",
+    options: ["China", "India", "United States", "Indonesia"],
+    correct: 0
+  },
+  {
+    question: "What is the capital city of Australia?",
+    options: ["Canberra", "Sydney", "Melbourne", "Brisbane"],
+    correct: 0
+  },
+  {
+    question: "Which desert is the largest in the world?",
+    options: ["Sahara Desert", "Gobi Desert", "Arabian Desert", "Kalahari Desert"],
+    correct: 0
+  },
+  {
+    question: "Which country is the Eiffel Tower located in?",
+    options: ["France", "Italy", "Spain", "Germany"],
     correct: 0
   },
   {
     question: "What is the smallest country in the world?",
-    options: ["Monaco", "Vatican City", "San Marino", "Liechtenstein"],
-    correct: 1
+    options: ["Vatican City", "Monaco", "San Marino", "Liechtenstein"],
+    correct: 0
   },
   {
-    question: "What is the only U.S. state that does not have a rectangular flag?",
-    options: ["Texas", "Ohio", "Wyoming", "Colorado"],
-    correct: 1
+    question: "What is the name of the only mammal capable of true flight (not gliding)?",
+    options: ["The bat", "The flying squirrel", "The sugar glider", "The colugo"],
+    correct: 0
   },
   {
-    question: "What is the only U.S. state with a name that ends in three consecutive vowels?",
-    options: ["Iowa", "Hawaii", "Idaho", "Utah"],
-    correct: 1
+    question: "What is the name of the smallest species of penguin?",
+    options: ["The little blue penguin", "The emperor penguin", "The king penguin", "The adelie penguin"],
+    correct: 0
   },
   {
-    question: "What is the only U.S. state that borders just one other?",
-    options: ["Alaska", "Maine", "Hawaii", "Rhode Island"],
-    correct: 1
+    question: "What is the name of the insect that holds the record for the fastest flying insect in the world?",
+    options: ["The dragonfly", "The bee", "The butterfly", "The moth"],
+    correct: 0
   },
   {
-    question: "What is the oldest continuously inhabited city in the world?",
-    options: ["Athens", "Jericho", "Damascus", "Rome"],
-    correct: 1
+    question: "What is the name of the small, elusive mammal native to Australia that is capable of laying eggs?",
+    options: ["The platypus", "The echidna", "The kangaroo", "The koala"],
+    correct: 0
   },
   {
-    question: "What is the rarest blood type?",
-    options: ["O-", "AB-", "B-", "A-"],
-    correct: 1
+    question: "What is the name of the bird species known for its ability to mimic chainsaws and other mechanical sounds?",
+    options: ["The lyrebird", "The parrot", "The mockingbird", "The raven"],
+    correct: 0
   },
   {
-    question: "What is the capital city of Paraguay?",
-    options: ["Lima", "Asuncion", "Bogota", "Montevideo"],
-    correct: 1
+    question: "What is the only species of bear found in the Southern Hemisphere?",
+    options: ["The spectacled bear", "The polar bear", "The grizzly bear", "The black bear"],
+    correct: 0
   },
   {
-    question: "What is the world's most venomous fish?",
-    options: ["Pufferfish", "Stonefish", "Lionfish", "Stingray"],
-    correct: 1
+    question: "What is the name of the animal with the most complex eyesight in the animal kingdom?",
+    options: ["The mantis shrimp", "The eagle", "The octopus", "The chameleon"],
+    correct: 0
   },
   {
-    question: "What is the only U.S. state with a Spanish motto?",
-    options: ["California", "Montana", "New Mexico", "Texas"],
-    correct: 1
+    question: "What is the name of the animal with the largest brain relative to its body size?",
+    options: ["The sperm whale", "The elephant", "The dolphin", "The human"],
+    correct: 0
   }
 ];
 
-// Remove duplicates and shuffle questions
-const unique_questions = [];
-const seen_questions = new Set();
+// Function to get unique questions
+function getUniqueQuestions() {
+  const unique_questions = [];
+  const seen_questions = new Set();
 
-for (const q of all_questions) {
-  if (!seen_questions.has(q.question)) {
-    seen_questions.add(q.question);
-    unique_questions.push(q);
+  for (const q of all_questions) {
+    if (!seen_questions.has(q.question)) {
+      seen_questions.add(q.question);
+      unique_questions.push(q);
+    }
   }
+  return unique_questions;
 }
 
-// Shuffle the unique questions array
-const shuffled_unique = shuffleArray(unique_questions);
+// Function to randomly select and prepare questions
+function selectRandomQuestions() {
+  const unique_questions = getUniqueQuestions();
+  
+  // Deep copy questions for selection
+  const questions_copy = unique_questions.map(q => ({
+    question: q.question,
+    options: [...q.options],
+    correct: q.correct
+  }));
+  
+  // Shuffle to get random order
+  let shuffled_questions = shuffleArray(questions_copy);
+  
+  // Randomly select a subset of questions (between 10-13 questions)
+  // This ensures different questions each game
+  const min_questions = 10;
+  const max_questions = Math.min(13, unique_questions.length);
+  const num_to_select = Math.floor(Math.random() * (max_questions - min_questions + 1)) + min_questions;
+  
+  // Take a random subset
+  const selected_subset = shuffled_questions.slice(0, num_to_select);
+  
+  // Shuffle the subset again for extra randomness
+  const final_shuffled = shuffleArray(selected_subset);
 
-// Shuffle options for each question and create final questions array
-const questions = shuffled_unique.map(q => shuffleQuestionOptions(q));
+  // Shuffle options for each question and return final questions array
+  // This ensures both question order AND answer positions are randomized
+  return final_shuffled.map(q => shuffleQuestionOptions(q));
+}
+
+// Initialize questions array (will be regenerated on each quiz start)
+let questions = selectRandomQuestions();
 
 let current_question_index = 0;
 let selected_option = null;
 let score = 0;
-let total_questions = 15; // Will be limited to available questions in init
+let total_questions = 0; // Will be set based on available questions
 let answered_questions = 0;
 let user_answers = [];
 let correct_answers = [];
 
 function init_quiz() {
-  // Limit total_questions to available questions
-  total_questions = Math.min(total_questions, questions.length);
+  // Set total_questions to the number of available questions (all unique, no repeats)
+  total_questions = questions.length;
   
   // Update the total questions display
   document.getElementById('total-questions').textContent = total_questions;
@@ -365,6 +593,10 @@ function show_results() {
 }
 
 function restart_quiz() {
+  // Select new random questions for the restart - ensure different questions
+  questions = selectRandomQuestions();
+  
+  // Reset all quiz state
   current_question_index = 0;
   selected_option = null;
   score = 0;
@@ -372,9 +604,14 @@ function restart_quiz() {
   user_answers = [];
   correct_answers = [];
   
+  // Hide results and show question container
+  document.getElementById('results-container').style.display = 'none';
+  document.getElementById('question-container').style.display = 'block';
+  
   document.getElementById('current-question').textContent = '1';
   document.getElementById('stations').innerHTML = '';
   
+  // Reinitialize the quiz with new questions
   init_quiz();
 }
 
@@ -387,6 +624,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const intro_train = document.getElementById('intro-train');
   
   start_btn.addEventListener('click', () => {
+    // Select new random questions each time the quiz starts
+    questions = selectRandomQuestions();
+    
     // Make train leave to the right
     intro_train.classList.add('leaving');
     
