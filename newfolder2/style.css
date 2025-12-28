@@ -106,11 +106,6 @@ header h1 {
     left: -30%;
 }
 
-.select-wrapper:focus-within::before {
-    top: -30%;
-    left: -30%;
-}
-
 #player-select {
     padding: 12px 20px;
     font-size: 18px;
