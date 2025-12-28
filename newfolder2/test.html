@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Placeholder</title>
+</head>
+<body>
+    <h1>Testing Player Placeholder Images</h1>
+    <div id="test"></div>
+    <script>
+        function getPlayerInitials(name) {
+            const parts = name.split(' ');
+            if (parts.length >= 2) {
+                return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+            }
+            return name.substring(0, 2).toUpperCase();
+        }
+
+        function createPlayerPlaceholder(name, number, size = 150) {
+            const initials = getPlayerInitials(name);
+            const fontSize = Math.floor(size * 0.21);
+            const numberSize = Math.floor(size * 0.24);
+            const center = size / 2;
+            const circleY = size * 0.33;
+            const initialsY = size * 0.43;
+            const numberY = size * 0.73;
+            const radius = size * 0.17;
+            const uniqueId = 'g' + number + size + Math.floor(Math.random() * 10000);
+            
+            const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + size + '" height="' + size + '">' +
+                '<defs>' +
+                '<linearGradient id="' + uniqueId + '" x1="0%" y1="0%" x2="100%" y2="100%">' +
+                '<stop offset="0%" stop-color="#203731"/>' +
+                '<stop offset="100%" stop-color="#0d2818"/>' +
+                '</linearGradient>' +
+                '</defs>' +
+                '<rect width="' + size + '" height="' + size + '" fill="url(#' + uniqueId + ')" rx="' + (size/2) + '"/>' +
+                '<circle cx="' + center + '" cy="' + circleY + '" r="' + radius + '" fill="#FFB612" opacity="0.3"/>' +
+                '<text x="' + center + '" y="' + initialsY + '" font-size="' + fontSize + '" font-weight="bold" fill="#FFB612" text-anchor="middle" dominant-baseline="middle">' + initials + '</text>' +
+                '<text x="' + center + '" y="' + numberY + '" font-size="' + numberSize + '" font-weight="bold" fill="#FFB612" text-anchor="middle" dominant-baseline="middle">#' + number + '</text>' +
+                '</svg>';
+            
+            return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+        }
+
+        const testDiv = document.getElementById('test');
+        const testImg = document.createElement('img');
+        testImg.src = createPlayerPlaceholder('Jordan Love', 10, 150);
+        testImg.style.width = '150px';
+        testImg.style.height = '150px';
+        testImg.style.border = '2px solid #FFB612';
+        testDiv.appendChild(testImg);
+        console.log('Test image URL:', testImg.src.substring(0, 200));
+    </script>
+</body>
+</html>
+

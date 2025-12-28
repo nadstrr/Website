@@ -1,0 +1,254 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #203731 0%, #0d2818 100%);
+    min-height: 100vh;
+    padding: 20px;
+    color: #fff;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 30px 0;
+}
+
+header h1 {
+    font-size: 48px;
+    color: #FFB612;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    font-size: 20px;
+    color: #C4CED4;
+}
+
+.loading {
+    text-align: center;
+    font-size: 24px;
+    color: #FFB612;
+    padding: 40px;
+    display: none;
+}
+
+.loading.show {
+    display: block;
+}
+
+.players-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 25px;
+    padding: 20px 0;
+}
+
+.player-card {
+    background: linear-gradient(145deg, #1a2e28 0%, #0f1f18 100%);
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid #203731;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.player-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(255, 182, 18, 0.3);
+    border-color: #FFB612;
+}
+
+.player-photo {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #FFB612;
+    margin-bottom: 15px;
+    background: #0d2818;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.player-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: #FFB612;
+    margin-bottom: 5px;
+}
+
+.player-position {
+    font-size: 14px;
+    color: #C4CED4;
+    margin-bottom: 5px;
+}
+
+.player-number {
+    font-size: 16px;
+    color: #fff;
+    font-weight: 600;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    overflow-y: auto;
+}
+
+.modal.show {
+    display: block;
+}
+
+.modal-content {
+    background: linear-gradient(145deg, #1a2e28 0%, #0f1f18 100%);
+    margin: 50px auto;
+    padding: 30px;
+    border: 3px solid #FFB612;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 800px;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.close {
+    color: #FFB612;
+    float: right;
+    font-size: 32px;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.3s;
+}
+
+.close:hover {
+    color: #fff;
+}
+
+#modal-body {
+    margin-top: 20px;
+    color: #fff;
+}
+
+.player-stats-header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #FFB612;
+}
+
+.player-stats-header img {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    border: 4px solid #FFB612;
+    margin-bottom: 15px;
+    object-fit: cover;
+}
+
+.player-stats-header h2 {
+    font-size: 32px;
+    color: #FFB612;
+    margin-bottom: 10px;
+}
+
+.player-stats-header .player-info {
+    font-size: 18px;
+    color: #C4CED4;
+}
+
+.stats-section {
+    margin: 30px 0;
+}
+
+.stats-section h3 {
+    font-size: 24px;
+    color: #FFB612;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #203731;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.stat-item {
+    background: rgba(32, 55, 49, 0.5);
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 3px solid #FFB612;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: #C4CED4;
+    margin-bottom: 5px;
+}
+
+.stat-value {
+    font-size: 24px;
+    font-weight: bold;
+    color: #FFB612;
+}
+
+.no-stats {
+    text-align: center;
+    padding: 40px;
+    color: #C4CED4;
+    font-size: 18px;
+}
+
+.error-message {
+    text-align: center;
+    color: #ff6b6b;
+    padding: 20px;
+    background: rgba(255, 107, 107, 0.1);
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+@media (max-width: 768px) {
+    .players-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 15px;
+    }
+    
+    .player-photo {
+        width: 120px;
+        height: 120px;
+    }
+    
+    header h1 {
+        font-size: 36px;
+    }
+    
+    .modal-content {
+        width: 95%;
+        padding: 20px;
+    }
+}
+
