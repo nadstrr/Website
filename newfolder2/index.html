@@ -13,6 +13,27 @@
             <p class="subtitle">2025 Season Roster</p>
         </header>
         
+        <div class="dropdowns-wrapper">
+            <div class="player-select-container">
+                <div class="select-wrapper">
+                    <select id="player-select">
+                        <option value="">Select a player...</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="sort-container">
+                <label for="sort-select" style="color: #FFB612; font-size: 18px; margin-right: 10px;">Sort by:</label>
+                <div class="select-wrapper">
+                    <select id="sort-select">
+                        <option value="alphabetical">Alphabetical</option>
+                        <option value="number">Player Number</option>
+                        <option value="stats">Best Stats</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
         <div id="loading" class="loading">Loading players...</div>
         
         <div id="players-grid" class="players-grid"></div>

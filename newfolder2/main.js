@@ -3,12 +3,134 @@ const PACKERS_TEAM_ID = 'GB';
 
 // Player data storage
 let playersData = [];
+let currentSortOrder = 'alphabetical';
 
 // Initialize the page
 document.addEventListener('DOMContentLoaded', () => {
     loadPlayers();
     setupModalClose();
+    setupPlayerSelect();
+    setupSortSelect();
 });
+
+// Setup player select dropdown
+function setupPlayerSelect() {
+    const playerSelect = document.getElementById('player-select');
+    
+    playerSelect.addEventListener('change', (e) => {
+        const selectedPlayerId = parseInt(e.target.value);
+        if (selectedPlayerId && playersData.length > 0) {
+            const selectedPlayer = playersData.find(p => p.id === selectedPlayerId);
+            if (selectedPlayer) {
+                showPlayerStats(selectedPlayer);
+                // Reset dropdown to placeholder
+                e.target.value = '';
+            }
+        }
+    });
+}
+
+// Setup sort select dropdown
+function setupSortSelect() {
+    const sortSelect = document.getElementById('sort-select');
+    
+    sortSelect.addEventListener('change', (e) => {
+        currentSortOrder = e.target.value;
+        if (playersData.length > 0) {
+            displayPlayers(playersData);
+        }
+    });
+}
+
+// Calculate stats score for a player
+function calculateStatsScore(player) {
+    if (!player.stats) return 0;
+    
+    let score = 0;
+    const stats = player.stats;
+    
+    // Passing stats
+    if (stats.passing) {
+        score += (stats.passing.yards || 0) * 0.1;
+        score += (stats.passing.touchdowns || 0) * 10;
+        score -= (stats.passing.interceptions || 0) * 5;
+        if (stats.passing.rating) {
+            score += stats.passing.rating * 2;
+        }
+    }
+    
+    // Rushing stats
+    if (stats.rushing) {
+        score += (stats.rushing.yards || 0) * 0.1;
+        score += (stats.rushing.touchdowns || 0) * 10;
+    }
+    
+    // Receiving stats
+    if (stats.receiving) {
+        score += (stats.receiving.yards || 0) * 0.1;
+        score += (stats.receiving.receptions || 0) * 2;
+        score += (stats.receiving.touchdowns || 0) * 10;
+    }
+    
+    // Defensive stats
+    if (stats.defense) {
+        score += (stats.defense.tackles || 0) * 2;
+        score += (stats.defense.sacks || 0) * 20;
+        score += (stats.defense.interceptions || 0) * 15;
+        score += (stats.defense.passesDefended || 0) * 5;
+        score += (stats.defense.forcedFumbles || 0) * 10;
+    }
+    
+    // Kicking stats
+    if (stats.kicking) {
+        score += (stats.kicking.fieldGoalsMade || 0) * 5;
+        score += (stats.kicking.extraPointsMade || 0) * 1;
+        if (stats.kicking.fieldGoalPercentage) {
+            score += stats.kicking.fieldGoalPercentage * 2;
+        }
+    }
+    
+    // Punting stats
+    if (stats.punting) {
+        score += (stats.punting.average || 0) * 0.5;
+        score += (stats.punting.inside20 || 0) * 3;
+    }
+    
+    // Offensive line stats
+    if (stats.offensive) {
+        score += (stats.offensive.gamesStarted || 0) * 5;
+        score += (stats.offensive.snaps || 0) * 0.1;
+    }
+    
+    return score;
+}
+
+// Sort players based on current sort order
+function sortPlayers(players) {
+    const sorted = [...players];
+    
+    switch (currentSortOrder) {
+        case 'alphabetical':
+            sorted.sort((a, b) => a.name.localeCompare(b.name));
+            break;
+        case 'number':
+            sorted.sort((a, b) => {
+                const numA = a.number || 999;
+                const numB = b.number || 999;
+                return numA - numB;
+            });
+            break;
+        case 'stats':
+            sorted.sort((a, b) => {
+                const scoreA = calculateStatsScore(a);
+                const scoreB = calculateStatsScore(b);
+                return scoreB - scoreA; // Descending order (best first)
+            });
+            break;
+    }
+    
+    return sorted;
+}
 
 // Setup modal close functionality
 function setupModalClose() {
@@ -32,6 +154,7 @@ function setupModalClose() {
         }
     });
 }
+
 
 // Load Packers players
 async function loadPlayers() {
@@ -1244,7 +1367,26 @@ function displayPlayers(players) {
     const playersGrid = document.getElementById('players-grid');
     playersGrid.innerHTML = '';
     
-    players.forEach(player => {
+    // Sort players based on current sort order
+    const sortedPlayers = sortPlayers(players);
+    
+    // Populate dropdown with player names (always alphabetical for dropdown)
+    const playerSelect = document.getElementById('player-select');
+    // Clear existing options except the first one
+    playerSelect.innerHTML = '<option value="">Select a player...</option>';
+    
+    // Add players to dropdown in alphabetical order
+    const alphabeticalPlayers = [...players].sort((a, b) => a.name.localeCompare(b.name));
+    alphabeticalPlayers.forEach(player => {
+        const option = document.createElement('option');
+        option.value = player.id;
+        option.textContent = `${player.name}${player.number ? ' #' + player.number : ''} - ${player.position}`;
+        option.dataset.playerId = player.id;
+        playerSelect.appendChild(option);
+    });
+    
+    // Display players in grid using sorted order
+    sortedPlayers.forEach(player => {
         const playerCard = document.createElement('div');
         playerCard.className = 'player-card';
         playerCard.addEventListener('click', () => showPlayerStats(player));

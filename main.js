@@ -36,6 +36,78 @@ function createFireworks() {
     }
 }
 
+// Store smoke interval to clear it if needed
+let currentSmokeInterval = null;
+
+function createJointAndSmoke() {
+    const smokeContainer = document.getElementById('smoke-container');
+    const resultElement = document.getElementById('result');
+    
+    // Remove ALL existing joints (in case there are duplicates)
+    const existingJoints = document.querySelectorAll('#joint');
+    existingJoints.forEach(joint => joint.remove());
+    
+    // Clear any existing smoke interval
+    if (currentSmokeInterval) {
+        clearInterval(currentSmokeInterval);
+        currentSmokeInterval = null;
+    }
+    
+    // Create joint emoji positioned under the result text
+    const joint = document.createElement('div');
+    joint.id = 'joint';
+    joint.textContent = '🍁';
+    
+    // Position it right after the result element (use appendChild to ensure it's at the end)
+    if (resultElement.nextSibling) {
+        resultElement.parentNode.insertBefore(joint, resultElement.nextSibling);
+    } else {
+        resultElement.parentNode.appendChild(joint);
+    }
+    
+    // Wait for DOM to update, then get position of joint for smoke to start from
+    setTimeout(() => {
+        const jointRect = joint.getBoundingClientRect();
+        const startY = jointRect.top + jointRect.height / 2;
+        const startX = jointRect.left + jointRect.width / 2;
+        
+        // Create smoke particles continuously
+        currentSmokeInterval = setInterval(() => {
+            for (let i = 0; i < 3; i++) {
+                const smoke = document.createElement('div');
+                smoke.className = 'smoke-particle';
+                
+                // Position smoke at the joint location
+                smoke.style.left = startX + 'px';
+                smoke.style.top = startY + 'px';
+                
+                // Random drift for each particle
+                const drift = (Math.random() - 0.5) * 100;
+                smoke.style.setProperty('--drift', drift + 'px');
+                
+                // Random delay for staggered effect
+                smoke.style.animationDelay = (Math.random() * 0.5) + 's';
+                
+                smokeContainer.appendChild(smoke);
+                
+                // Remove particle after animation
+                setTimeout(() => {
+                    smoke.remove();
+                }, 3000);
+            }
+        }, 200);
+        
+        // Stop creating smoke and remove joint after 5 seconds
+        setTimeout(() => {
+            if (currentSmokeInterval) {
+                clearInterval(currentSmokeInterval);
+                currentSmokeInterval = null;
+            }
+            joint.remove();
+        }, 5000);
+    }, 100);
+}
+
 function checkNumber() {
     const input = document.getElementById('numberInput');
     const result = document.getElementById('result');
@@ -45,6 +117,11 @@ function checkNumber() {
     if (number === 67) {
         result.textContent = "slay qween";
         isSpecial = true;
+        // Trigger shake animation on body
+        document.body.classList.add('shake');
+        setTimeout(() => {
+            document.body.classList.remove('shake');
+        }, 2000);
     } else if (number === 666) {
         result.textContent = "satan detected";
         isSpecial = true;
@@ -54,6 +131,7 @@ function checkNumber() {
     } else if (number === 420) {
         result.textContent = "420 blaze it";
         isSpecial = true;
+        createJointAndSmoke();
     } else if (number === 69) {
         result.textContent = "boring";
         isSpecial = true;

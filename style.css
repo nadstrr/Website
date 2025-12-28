@@ -100,3 +100,70 @@ img{
     opacity: 0;
   }
 }
+
+/* Shake animation for whole screen - 67 meme style (tilt left and right) */
+@keyframes shake {
+  0%, 100% { transform: rotate(0deg); }
+  10% { transform: rotate(-8deg); }
+  20% { transform: rotate(8deg); }
+  30% { transform: rotate(-7deg); }
+  40% { transform: rotate(7deg); }
+  50% { transform: rotate(-6deg); }
+  60% { transform: rotate(6deg); }
+  70% { transform: rotate(-4deg); }
+  80% { transform: rotate(4deg); }
+  90% { transform: rotate(-2deg); }
+}
+
+body.shake {
+  animation: shake 2s ease-in-out;
+  transform-origin: center center;
+}
+
+/* Joint and smoke styles */
+#joint {
+  position: relative;
+  display: block;
+  text-align: center;
+  margin: 20px auto;
+  z-index: 998;
+  animation: jointAppear 0.5s ease-out;
+  font-size: 150px;
+  line-height: 1;
+}
+
+@keyframes jointAppear {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.smoke-particle {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  background: rgba(200, 200, 200, 0.6);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: smokeRise 3s ease-out forwards;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes smokeRise {
+  0% {
+    transform: translate(-50%, -50%) translateY(0) scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translate(calc(-50% + var(--drift)), -50%) translateY(-100vh) scale(2);
+    opacity: 0;
+  }
+}
