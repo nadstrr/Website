@@ -1,10 +1,12 @@
 // 3D Gallery Room - Three.js Implementation with Entry Door
 
 let scene, camera, renderer;
+let cssRenderer, cssScene;
 let raycaster;
 let posters = [];
 let entryDoor;
 let entryDoorGroup;
+let numberGameObject;
 
 // Game state
 let game_state = 'entry'; // 'entry', 'entering', 'inside', 'exiting'
@@ -85,6 +87,18 @@ function init() {
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     document.getElementById('canvas-container').appendChild(renderer.domElement);
 
+    // CSS3D Renderer for HTML elements in 3D space
+    cssScene = new THREE.Scene();
+    cssRenderer = new THREE.CSS3DRenderer();
+    cssRenderer.setSize(window.innerWidth, window.innerHeight);
+    cssRenderer.domElement.style.position = 'absolute';
+    cssRenderer.domElement.style.top = '0';
+    cssRenderer.domElement.style.left = '0';
+    document.getElementById('canvas-container').appendChild(cssRenderer.domElement);
+    
+    // Setup number game in 3D space
+    setupNumberGame3D();
+
     // Raycaster for click detection
     raycaster = new THREE.Raycaster();
 
@@ -116,6 +130,12 @@ function init() {
         document.getElementById('loading').style.opacity = '0';
         setTimeout(() => {
             document.getElementById('loading').style.display = 'none';
+            
+            // Check if returning from a poster page
+            if (sessionStorage.getItem('returnToRoom') === 'true') {
+                sessionStorage.removeItem('returnToRoom');
+                startInsideRoom();
+            }
         }, 500);
     }, 1000);
 
@@ -125,8 +145,107 @@ function init() {
         instructions.style.display = 'none';
     }
 
+    // Setup number game
+    setupNumberGame();
+
     // Start animation loop
     animate();
+}
+
+function startInsideRoom() {
+    // Position camera inside the room
+    camera.position.set(0, 0, 0);
+    
+    // Face the back wall (where Train Trivia is)
+    yaw = 0;
+    pitch = 0;
+    updateCamera();
+    
+    // Open and close the door (so it's closed)
+    entryDoor.rotation.y = 0;
+    
+    // Update game state
+    game_state = 'inside';
+    
+    // Show instructions for inside view
+    const instructions = document.getElementById('instructions');
+    if (instructions) {
+        instructions.innerHTML = '<p>Click to look around • WASD to move • Click posters to enter • Click door to exit</p>';
+        instructions.style.display = 'block';
+        instructions.style.opacity = '1';
+    }
+}
+
+function setupNumberGame3D() {
+    const numberGame = document.getElementById('number-game');
+    
+    // Create CSS3D object from the number game element
+    numberGameObject = new THREE.CSS3DObject(numberGame);
+    
+    // Position on the wall just to the left of the door frame
+    // This is where the door would cover it when opening
+    const doorCenterY = -ROOM_HEIGHT / 2 + DOOR_HEIGHT / 2;
+    numberGameObject.position.set(-DOOR_WIDTH / 2 - 1.8, doorCenterY, ROOM_DEPTH / 2 - 0.05);
+    numberGameObject.scale.set(0.012, 0.012, 0.012); // Scale down the HTML element
+    
+    cssScene.add(numberGameObject);
+}
+
+function setupNumberGame() {
+    const input = document.getElementById('number-input');
+    const submitBtn = document.getElementById('number-submit');
+    const response = document.getElementById('number-response');
+    
+    function processNumber() {
+        const num = parseInt(input.value);
+        let message = '';
+        
+        // Remove any existing rotation
+        document.getElementById('canvas-container').classList.remove('rotating');
+        
+        switch(num) {
+            case 118:
+                message = 'fume';
+                break;
+            case 67:
+                message = '🔄';
+                const canvas = document.getElementById('canvas-container');
+                canvas.classList.remove('rotating');
+                void canvas.offsetWidth; // Force reflow to restart animation
+                canvas.classList.add('rotating');
+                break;
+            case 69:
+                message = 'cheeky ;)';
+                break;
+            case 420:
+                message = 'blaze it 🔥';
+                break;
+            case 666:
+                message = 'hail satan 😈';
+                break;
+            case 789:
+                message = 'why he do dat?';
+                break;
+            default:
+                message = 'try again';
+        }
+        
+        response.textContent = message;
+        response.classList.add('show');
+        
+        // Hide response after 3 seconds
+        setTimeout(() => {
+            response.classList.remove('show');
+        }, 3000);
+    }
+    
+    submitBtn.addEventListener('click', processNumber);
+    
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            processNumber();
+        }
+    });
 }
 
 function setupLighting() {
@@ -318,6 +437,92 @@ function createEntryDoor() {
     );
     handleInside.position.set(DOOR_WIDTH - 0.4, 0, -0.1);
     entryDoor.add(handleInside);
+    
+    // "Click to Enter" sign on door
+    const signTexture = createSignTexture('Click to Enter');
+    const signMaterial = new THREE.MeshStandardMaterial({
+        map: signTexture,
+        roughness: 0.4,
+        metalness: 0.6
+    });
+    
+    const sign = new THREE.Mesh(
+        new THREE.BoxGeometry(2.5, 0.8, 0.05),
+        signMaterial
+    );
+    sign.position.set(DOOR_WIDTH / 2, 0, 0.08);
+    entryDoor.add(sign);
+    
+    // "Click to Exit" sign on inside of door
+    const exitSignTexture = createSignTexture('Click to Exit');
+    const exitSignMaterial = new THREE.MeshStandardMaterial({
+        map: exitSignTexture,
+        roughness: 0.4,
+        metalness: 0.6
+    });
+    
+    const exitSign = new THREE.Mesh(
+        new THREE.BoxGeometry(2.5, 0.8, 0.05),
+        exitSignMaterial
+    );
+    exitSign.position.set(DOOR_WIDTH / 2, 0, -0.08);
+    exitSign.rotation.y = Math.PI; // Face the inside of the room
+    entryDoor.add(exitSign);
+}
+
+function createSignTexture(text) {
+    const canvas = document.createElement('canvas');
+    canvas.width = 512;
+    canvas.height = 164;
+    const ctx = canvas.getContext('2d');
+    
+    // Bright shiny gold background
+    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    gradient.addColorStop(0, '#FFD700');
+    gradient.addColorStop(0.2, '#FFEC8B');
+    gradient.addColorStop(0.4, '#FFFACD');
+    gradient.addColorStop(0.5, '#FFD700');
+    gradient.addColorStop(0.6, '#FFFACD');
+    gradient.addColorStop(0.8, '#FFD700');
+    gradient.addColorStop(1, '#DAA520');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Border
+    ctx.strokeStyle = '#B8860B';
+    ctx.lineWidth = 8;
+    ctx.strokeRect(4, 4, canvas.width - 8, canvas.height - 8);
+    
+    // Inner border
+    ctx.strokeStyle = '#DAA520';
+    ctx.lineWidth = 3;
+    ctx.strokeRect(12, 12, canvas.width - 24, canvas.height - 24);
+    
+    // Text settings
+    ctx.font = 'bold 56px Georgia';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    
+    // Text shadow for depth
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+    ctx.fillText(text, canvas.width / 2 + 3, canvas.height / 2 + 3);
+    
+    // Text outline
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = 6;
+    ctx.strokeText(text, canvas.width / 2, canvas.height / 2);
+    
+    // Main text fill
+    ctx.fillStyle = '#1a0a00';
+    ctx.fillText(text, canvas.width / 2, canvas.height / 2);
+    
+    // Highlight on text
+    ctx.fillStyle = 'rgba(80, 40, 20, 0.8)';
+    ctx.fillText(text, canvas.width / 2, canvas.height / 2);
+    
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.needsUpdate = true;
+    return texture;
 }
 
 function createDoorTexture(text, icon) {
@@ -867,6 +1072,7 @@ function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
+    cssRenderer.setSize(window.innerWidth, window.innerHeight);
 }
 
 function onKeyDown(event) {
@@ -978,6 +1184,11 @@ function animateEnterRoom() {
     
     const instructions = document.getElementById('instructions');
     instructions.style.opacity = '0';
+    
+    // Fade out number game as door opens (simulates door covering it)
+    const numberGame = document.getElementById('number-game');
+    numberGame.style.transition = 'opacity 0.3s ease';
+    numberGame.style.opacity = '0';
     
     // Door center Y position
     const doorCenterY = -ROOM_HEIGHT / 2 + DOOR_HEIGHT / 2;
@@ -1151,6 +1362,11 @@ function animateExitRoom() {
             game_state = 'entry';
             is_animating = false;
             
+            // Fade in number game after door closes
+            const numberGame = document.getElementById('number-game');
+            numberGame.style.transition = 'opacity 0.3s ease';
+            numberGame.style.opacity = '1';
+            
             // Hide instructions on entry screen
             instructions.style.display = 'none';
             
@@ -1180,6 +1396,8 @@ function animateToPage(targetPosition, url) {
         if (progress < 1) {
             requestAnimationFrame(zoomAnimation);
         } else {
+            // Remember we should return to inside the room
+            sessionStorage.setItem('returnToRoom', 'true');
             window.location.href = url;
         }
     }
@@ -1294,6 +1512,7 @@ function animate() {
     crosshair.style.display = (game_state === 'inside' && is_pointer_locked) ? 'block' : 'none';
 
     renderer.render(scene, camera);
+    cssRenderer.render(cssScene, camera);
 }
 
 // Initialize when DOM is ready

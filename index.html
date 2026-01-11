@@ -6,6 +6,7 @@
     <title>Follow the Sun - Gallery</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/renderers/CSS3DRenderer.js"></script>
     <script src="main.js" defer></script>
 </head>
 <body>
@@ -19,6 +20,11 @@
     <div id="crosshair">+</div>
     <div id="instructions">
         <p>Click the door to enter</p>
+    </div>
+    <div id="number-game">
+        <input type="number" id="number-input" placeholder="Enter a number...">
+        <button id="number-submit">Enter</button>
+        <div id="number-response"></div>
     </div>
 </body>
 </html>
