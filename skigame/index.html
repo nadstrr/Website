@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alpine Skiing</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="game-canvas"></canvas>
+        <div id="ui-overlay">
+            <div id="start-screen">
+                <h1>Alpine Skiing</h1>
+                <p class="subtitle">Physics-Driven Realism</p>
+                <button id="play-button">Play</button>
+                <div id="start-controls-info">
+                    <h3>Controls</h3>
+                    <div class="control-item">
+                        <span class="key">Space</span>
+                        <span class="desc">Start Skiing (gravity pulls you downhill)</span>
+                    </div>
+                    <div class="control-item">
+                        <span class="key">A / D</span>
+                        <span class="desc">Turn Left / Right (carving)</span>
+                    </div>
+                    <div class="control-item">
+                        <span class="key">Q / E</span>
+                        <span class="desc">Stance Width (Narrower/Wider)</span>
+                    </div>
+                <div class="control-item">
+                    <span class="key">Mouse X</span>
+                    <span class="desc">Edge Angle (Move mouse left/right)</span>
+                </div>
+            </div>
+        </div>
+            <div id="speed-indicator">0 km/h</div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
+

@@ -1,169 +1,203 @@
-body {
-    font-size: 15pt;
-    background-color:#FFDB58;
+* {
     margin: 0;
     padding: 0;
-    position: relative;
-    min-height: 100vh;
+    box-sizing: border-box;
 }
 
-#background-suns {
+body {
+    overflow: hidden;
+    background-color: #1a1a1a;
+    font-family: 'Georgia', serif;
+}
+
+#canvas-container {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 0;
-    pointer-events: none;
-    overflow: hidden;
-}
-
-#background-suns .sun {
-    position: absolute;
-    font-size: 80px;
-    opacity: 0.25;
-    transition: transform 0.1s linear;
-}
-
-#content {
-    position: relative;
     z-index: 1;
-    background-color: transparent;
 }
 
-.top-nav {
-    position: relative;
-    z-index: 100;
-    padding: 20px;
+#canvas-container canvas {
+    display: block;
+}
+
+/* Loading Screen */
+#loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    transition: opacity 0.5s ease;
+}
+
+.loading-content {
     text-align: center;
+    color: #d4af37;
 }
 
-.nav-button {
-    display: inline-block;
-    padding: 12px 30px;
-    background-color: #000;
-    color: #FFDB58;
-    text-decoration: none;
+.sun-loader {
+    font-size: 80px;
+    animation: pulse 1.5s ease-in-out infinite, spin 4s linear infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.8;
+    }
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.loading-content p {
+    margin-top: 20px;
+    font-size: 24px;
+    font-style: italic;
+    letter-spacing: 2px;
+    animation: fadeInOut 2s ease-in-out infinite;
+}
+
+@keyframes fadeInOut {
+    0%, 100% {
+        opacity: 0.5;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+/* Crosshair */
+#crosshair {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 24px;
+    font-weight: 100;
+    pointer-events: none;
+    text-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+    transition: all 0.15s ease;
+}
+
+#crosshair.hover {
+    color: #d4af37;
+    transform: translate(-50%, -50%) scale(1.5);
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.8);
+}
+
+/* Instructions */
+#instructions {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    pointer-events: none;
+}
+
+#instructions p {
+    color: #FFD700;
     font-size: 18px;
-    font-weight: 600;
-    border-radius: 8px;
-    border: 2px solid #000;
-    transition: all 0.3s ease;
-    font-family: Arial, sans-serif;
-    letter-spacing: 0.5px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-family: 'Georgia', serif;
+    
+    /* Wooden board background */
+    background: linear-gradient(135deg, #8B4513 0%, #A0522D 25%, #8B4513 50%, #6B3E12 75%, #8B4513 100%);
+    background-size: 200% 200%;
+    animation: woodGrain 8s ease-in-out infinite;
+    
+    padding: 16px 32px;
+    border-radius: 4px;
+    
+    /* Wood board styling */
+    border: 3px solid #654321;
+    border-top: 2px solid #A0522D;
+    border-bottom: 4px solid #5C2E0A;
+    box-shadow: 
+        0 8px 16px rgba(0, 0, 0, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.2),
+        0 0 0 2px rgba(139, 69, 19, 0.3);
+    
+    /* Text shadow for readability */
+    text-shadow: 
+        2px 2px 4px rgba(0, 0, 0, 0.8),
+        0 0 8px rgba(255, 215, 0, 0.3);
+    
+    /* Hanging rope effect */
+    position: relative;
 }
 
-.nav-button:hover {
-    background-color: #FFDB58;
-    color: #000;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+#instructions p::before {
+    content: '';
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 12px;
+    background: linear-gradient(to bottom, #654321, #3d2817);
+    border-radius: 2px 2px 0 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 
-.nav-button:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-img{
-  border:solid 3px;
-  
-  border-radius: 100px 100px 100px 100px;
-}
-
-@keyframes dance {
-  0%, 100% { transform: translateX(0) rotate(0deg); }
-  25% { transform: translateX(-10px) rotate(-5deg); }
-  50% { transform: translateX(10px) rotate(5deg); }
-  75% { transform: translateX(-10px) rotate(-5deg); }
+#instructions p::after {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 8px;
+    background: linear-gradient(to bottom, #8B7355, #654321);
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-#numberInput.dance {
-  animation: dance 0.6s ease-in-out;
+@keyframes woodGrain {
+    0%, 100% {
+        background-position: 0% 0%;
+    }
+    50% {
+        background-position: 100% 100%;
+    }
 }
 
-.firework {
-  position: absolute;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-@keyframes firework {
-  0% {
-    transform: translate(0, 0) scale(1);
-    opacity: 1;
-  }
-  100% {
-    transform: translate(var(--x), var(--y)) scale(0);
-    opacity: 0;
-  }
-}
-
-/* Shake animation for whole screen - 67 meme style (tilt left and right) */
-@keyframes shake {
-  0%, 100% { transform: rotate(0deg); }
-  10% { transform: rotate(-8deg); }
-  20% { transform: rotate(8deg); }
-  30% { transform: rotate(-7deg); }
-  40% { transform: rotate(7deg); }
-  50% { transform: rotate(-6deg); }
-  60% { transform: rotate(6deg); }
-  70% { transform: rotate(-4deg); }
-  80% { transform: rotate(4deg); }
-  90% { transform: rotate(-2deg); }
-}
-
-body.shake {
-  animation: shake 2s ease-in-out;
-  transform-origin: center center;
-}
-
-/* Joint and smoke styles */
-#joint {
-  position: relative;
-  display: block;
-  text-align: center;
-  margin: 20px auto;
-  z-index: 998;
-  animation: jointAppear 0.5s ease-out;
-  font-size: 150px;
-  line-height: 1;
-}
-
-@keyframes jointAppear {
-  0% {
-    opacity: 0;
-    transform: translateY(20px) scale(0.5);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.smoke-particle {
-  position: fixed;
-  width: 8px;
-  height: 8px;
-  background: rgba(200, 200, 200, 0.6);
-  border-radius: 50%;
-  pointer-events: none;
-  animation: smokeRise 3s ease-out forwards;
-  transform: translate(-50%, -50%);
-}
-
-@keyframes smokeRise {
-  0% {
-    transform: translate(-50%, -50%) translateY(0) scale(1);
-    opacity: 0.8;
-  }
-  50% {
-    opacity: 0.5;
-  }
-  100% {
-    transform: translate(calc(-50% + var(--drift)), -50%) translateY(-100vh) scale(2);
-    opacity: 0;
-  }
+/* Responsive */
+@media (max-width: 768px) {
+    .sun-loader {
+        font-size: 60px;
+    }
+    
+    .loading-content p {
+        font-size: 18px;
+    }
+    
+    #instructions p {
+        font-size: 14px;
+        padding: 12px 24px;
+    }
 }

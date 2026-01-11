@@ -1,44 +1,24 @@
-<!doctype html>
-
-<html>
-  <head> 
-  <link rel="stylesheet"
-  href="style.css">
-  <script src="main.js" defer></script>
-  </head>
-  <body>
-  <div id="background-suns">
-    <span class="sun">🌞</span>
-    <span class="sun">🌞</span>
-    <span class="sun">🌞</span>
-    <span class="sun">🌞</span>
-    <span class="sun">🌞</span>
-    <span class="sun">🌞</span>
-  </div>
-  <div id="content">
-    <nav class="top-nav">
-      <a href="newfolder/index.html" class="nav-button">Train Trivia</a>
-      <a href="newfolder2/index.html" class="nav-button">Packers Roster</a>
-    </nav>
-   <h1 style="font-size: 90px; text-align: center; "> <strong>Follow the sun!🌞</strong></h1>
-  <img id="henryImage" src="henry.jpeg" width="600px" style="display: block; margin: 0 auto; ">
-  <br>
-  <br>
-  <br>
-  <div style="text-align: center; margin: 20px auto; position: relative;">
-    <div id="fireworks-container" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; width: 100%; height: 100%; overflow: hidden;"></div>
-    <div id="smoke-container" style="position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); pointer-events: none; width: 100%; height: 100%; overflow: hidden; z-index: 999;"></div>
-    <p style="font-size: 24px; margin-bottom: 10px;">Choose a number:</p>
-    <input type="number" id="numberInput" placeholder="Enter a number" style="padding: 10px; font-size: 18px; text-align: center; border: 2px solid #000; border-radius: 5px;">
-    <br><br>
-    <button onclick="checkNumber()" style="padding: 10px 20px; font-size: 18px; background-color: #FFDB58; border: 2px solid #000; border-radius: 5px; cursor: pointer;">Check</button>
-    <br><br>
-    <p id="result" style="font-size: 24px; font-weight: bold; min-height: 30px;"></p>
-  </div>
-  <br>
-  <br>
-  <br>
-<h6 style="text-align: center;">(coded my first lil webpage ;))</h6>
-  </div>
-  </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Follow the Sun - Gallery</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="main.js" defer></script>
+</head>
+<body>
+    <div id="loading">
+        <div class="loading-content">
+            <div class="sun-loader">☀️</div>
+            <p>Entering Gallery...</p>
+        </div>
+    </div>
+    <div id="canvas-container"></div>
+    <div id="crosshair">+</div>
+    <div id="instructions">
+        <p>Click the door to enter</p>
+    </div>
+</body>
 </html>
