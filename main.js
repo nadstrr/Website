@@ -154,6 +154,16 @@ function init() {
             }
         }, 500);
     }, 1000);
+    
+    // Handle browser back button (bfcache restore)
+    window.addEventListener('pageshow', (event) => {
+        if (event.persisted && sessionStorage.getItem('returnToRoom') === 'true') {
+            sessionStorage.removeItem('returnToRoom');
+            startInsideRoom();
+            // Hide loading screen immediately since page was cached
+            document.getElementById('loading').style.display = 'none';
+        }
+    });
 
     // Hide instructions on entry screen
     const instructions = document.getElementById('instructions');
@@ -169,7 +179,7 @@ function init() {
 }
 
 function startInsideRoom() {
-    // Position camera inside the room
+    // Position camera inside the room (center)
     camera.position.set(0, 0, 0);
     
     // Face the back wall (where Train Trivia is)
@@ -177,18 +187,35 @@ function startInsideRoom() {
     pitch = 0;
     updateCamera();
     
-    // Open and close the door (so it's closed)
+    // Door should be closed
     entryDoor.rotation.y = 0;
     
     // Update game state
     game_state = 'inside';
+    is_animating = false;
+    
+    // Hide number game (it's outside)
+    const numberGame = document.getElementById('number-game');
+    if (numberGame) {
+        numberGame.style.opacity = '0';
+    }
     
     // Show instructions for inside view
     const instructions = document.getElementById('instructions');
     if (instructions) {
-        instructions.innerHTML = '<p>Click to look around • WASD to move • Click posters to enter • Click door to exit</p>';
-        instructions.style.display = 'block';
-        instructions.style.opacity = '1';
+        if (is_mobile) {
+            instructions.style.display = 'none';
+            // Show mobile hint briefly
+            const mobileHint = document.getElementById('mobile-hint');
+            if (mobileHint) {
+                mobileHint.classList.add('show');
+                setTimeout(() => mobileHint.classList.remove('show'), 4000);
+            }
+        } else {
+            instructions.innerHTML = '<p>Click to look around • WASD to move • Click posters to enter • Click door to exit</p>';
+            instructions.style.display = 'block';
+            instructions.style.opacity = '1';
+        }
     }
 }
 
