@@ -29,6 +29,15 @@ let yaw = 0;
 // Pointer lock state
 let is_pointer_locked = false;
 
+// Mobile detection and touch state
+const is_mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+let touchStartX = 0;
+let touchStartY = 0;
+let lastTouchX = 0;
+let lastTouchY = 0;
+let isTouching = false;
+let touchMoved = false;
+
 // Room dimensions
 const ROOM_WIDTH = 20;
 const ROOM_HEIGHT = 12;
@@ -121,9 +130,16 @@ function init() {
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('click', onClick);
     
-    // Pointer lock
-    document.addEventListener('pointerlockchange', onPointerLockChange);
-    document.addEventListener('pointerlockerror', onPointerLockError);
+    // Pointer lock (desktop only)
+    if (!is_mobile) {
+        document.addEventListener('pointerlockchange', onPointerLockChange);
+        document.addEventListener('pointerlockerror', onPointerLockError);
+    }
+    
+    // Touch events (mobile)
+    document.addEventListener('touchstart', onTouchStart, { passive: false });
+    document.addEventListener('touchmove', onTouchMove, { passive: false });
+    document.addEventListener('touchend', onTouchEnd, { passive: false });
 
     // Hide loading screen
     setTimeout(() => {
@@ -1134,6 +1150,9 @@ function onMouseMove(event) {
 function onClick(event) {
     if (is_animating) return;
     
+    // On mobile, use touch events instead
+    if (is_mobile) return;
+    
     if (game_state === 'entry') {
         // Check if clicking on entry door
         const mouse = new THREE.Vector2(
@@ -1144,7 +1163,7 @@ function onClick(event) {
         raycaster.setFromCamera(mouse, camera);
         const intersects = raycaster.intersectObject(entryDoor, true);
 
-    if (intersects.length > 0) {
+        if (intersects.length > 0) {
             animateEnterRoom();
         }
     } else if (game_state === 'inside') {
@@ -1167,11 +1186,11 @@ function onClick(event) {
         const posterIntersects = raycaster.intersectObjects(posters, true);
         if (posterIntersects.length > 0) {
             let posterGroup = posterIntersects[0].object;
-        while (posterGroup.parent && !posterGroup.userData.url) {
-            posterGroup = posterGroup.parent;
-        }
-        if (posterGroup.userData.url) {
-            document.exitPointerLock();
+            while (posterGroup.parent && !posterGroup.userData.url) {
+                posterGroup = posterGroup.parent;
+            }
+            if (posterGroup.userData.url) {
+                document.exitPointerLock();
                 animateToPage(posterGroup.position.clone(), posterGroup.userData.url);
             }
         }
@@ -1256,10 +1275,18 @@ function animateEnterRoom() {
             game_state = 'inside';
             is_animating = false;
             
-            // Update instructions for inside view
-            instructions.innerHTML = '<p>Click to look around • WASD to move • Click posters to enter • Click door to exit</p>';
-            instructions.style.display = 'block';
-            instructions.style.opacity = '1';
+            // Update instructions for inside view (different for mobile)
+            if (is_mobile) {
+                instructions.style.display = 'none';
+                // Show mobile hint briefly
+                const mobileHint = document.getElementById('mobile-hint');
+                mobileHint.classList.add('show');
+                setTimeout(() => mobileHint.classList.remove('show'), 4000);
+            } else {
+                instructions.innerHTML = '<p>Click to look around • WASD to move • Click posters to enter • Click door to exit</p>';
+                instructions.style.display = 'block';
+                instructions.style.opacity = '1';
+            }
             
             // Close the door behind us
             animateCloseDoor();
@@ -1417,6 +1444,99 @@ function onPointerLockError() {
     console.error('Pointer lock failed');
 }
 
+function onTouchStart(event) {
+    if (is_animating) return;
+    
+    // Don't interfere with number game input
+    if (event.target.closest('#number-game')) return;
+    
+    const touch = event.touches[0];
+    touchStartX = touch.clientX;
+    touchStartY = touch.clientY;
+    lastTouchX = touch.clientX;
+    lastTouchY = touch.clientY;
+    isTouching = true;
+    touchMoved = false;
+}
+
+function onTouchMove(event) {
+    if (!isTouching || is_animating) return;
+    
+    const touch = event.touches[0];
+    const deltaX = touch.clientX - lastTouchX;
+    const deltaY = touch.clientY - lastTouchY;
+    
+    // Check if this is a significant movement (not just a tap)
+    const totalMoveX = Math.abs(touch.clientX - touchStartX);
+    const totalMoveY = Math.abs(touch.clientY - touchStartY);
+    if (totalMoveX > 10 || totalMoveY > 10) {
+        touchMoved = true;
+    }
+    
+    // Only rotate camera if inside the room
+    if (game_state === 'inside') {
+        yaw -= deltaX * LOOK_SPEED * 2;
+        pitch -= deltaY * LOOK_SPEED * 2;
+        pitch = Math.max(-Math.PI / 2 + 0.1, Math.min(Math.PI / 2 - 0.1, pitch));
+        updateCamera();
+        event.preventDefault();
+    }
+    
+    lastTouchX = touch.clientX;
+    lastTouchY = touch.clientY;
+}
+
+function onTouchEnd(event) {
+    if (is_animating) {
+        isTouching = false;
+        return;
+    }
+    
+    // If didn't move much, treat as a tap (click)
+    if (!touchMoved) {
+        handleTap(touchStartX, touchStartY);
+    }
+    
+    isTouching = false;
+    touchMoved = false;
+}
+
+function handleTap(x, y) {
+    const mouse = new THREE.Vector2(
+        (x / window.innerWidth) * 2 - 1,
+        -(y / window.innerHeight) * 2 + 1
+    );
+    
+    if (game_state === 'entry') {
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObject(entryDoor, true);
+        if (intersects.length > 0) {
+            animateEnterRoom();
+        }
+    } else if (game_state === 'inside') {
+        raycaster.setFromCamera(mouse, camera);
+        
+        // Check entry door (to exit)
+        const doorIntersects = raycaster.intersectObject(entryDoor, true);
+        if (doorIntersects.length > 0) {
+            animateExitRoom();
+            return;
+        }
+        
+        // Check posters
+        const posterIntersects = raycaster.intersectObjects(posters, true);
+        if (posterIntersects.length > 0) {
+            let posterGroup = posterIntersects[0].object;
+            while (posterGroup.parent && !posterGroup.userData.url) {
+                posterGroup = posterGroup.parent;
+            }
+            if (posterGroup.userData.url) {
+                animateToPage(posterGroup.position.clone(), posterGroup.userData.url);
+            }
+        }
+    }
+}
+
 function updateMovement() {
     if (!is_pointer_locked || game_state !== 'inside') return;
     
@@ -1464,6 +1584,14 @@ function updateCamera() {
 }
 
 function checkCrosshairHover() {
+    // On mobile, show crosshair when inside, no hover effects
+    if (is_mobile) {
+        const crosshair = document.getElementById('crosshair');
+        crosshair.style.display = game_state === 'inside' ? 'block' : 'none';
+        crosshair.classList.remove('hover');
+        return;
+    }
+    
     if (!is_pointer_locked || game_state !== 'inside') {
         document.getElementById('crosshair').classList.remove('hover');
         return;
@@ -1509,7 +1637,11 @@ function animate() {
     
     // Update crosshair visibility
     const crosshair = document.getElementById('crosshair');
-    crosshair.style.display = (game_state === 'inside' && is_pointer_locked) ? 'block' : 'none';
+    if (is_mobile) {
+        crosshair.style.display = game_state === 'inside' ? 'block' : 'none';
+    } else {
+        crosshair.style.display = (game_state === 'inside' && is_pointer_locked) ? 'block' : 'none';
+    }
 
     renderer.render(scene, camera);
     cssRenderer.render(cssScene, camera);
